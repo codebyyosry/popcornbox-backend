@@ -75,59 +75,6 @@ Follow these instructions to get a local copy up and running.
 
 ---
 
-## 📡 API Endpoints
-
-### 🔑 Authentication
-
--   `POST /api/auth/register` — Register a new user.
--   `POST /api/auth/login` — Log in an existing user and receive a JWT.
-
-### 🎬 Movie Data (from TMDB)
-
--   `GET /api/movies/popular?page=1` — Get a list of popular movies.
--   `GET /api/movies/top-rated?page=1` — Get a list of top-rated movies.
--   `GET /api/movies/upcoming?page=1` — Get a list of upcoming movies.
--   `GET /api/movies/genres` — Get a list of all available movie genres.
--   `GET /api/movies/search?query=Batman&page=1` — Search for movies by a query string.
--   `GET /api/movies/genre/:genreId?page=1` — Get movies belonging to a specific genre.
--   `GET /api/movies/:id` — Get detailed information for a specific movie.
--   `GET /api/movies/:id/credits` — Get the cast and crew for a specific movie.
-
-### ❤️ User Favorites (Protected Route)
-
--   `POST /api/favorites/add` — Add a movie to the user's favorites list.
--   `GET /api/favorites` — Get all favorite movies for the logged-in user.
--   `DELETE /api/favorites/:movieId` — Remove a movie from the user's favorites list.
-
----
-
-## 🧪 Testing with Postman
-
-1.  **Register a new user** by sending a `POST` request to `/api/auth/register`.
-2.  **Login** using the new credentials via a `POST` request to `/api/auth/login`.
-3.  Copy the `token` from the login response.
-4.  For all **protected routes** (like the `/api/favorites` endpoints), you must include an `Authorization` header with your request:
-    -   **Key**: `Authorization`
-    -   **Value**: `Bearer <your_token>`
-
----
-
-## 📂 Project Structure
-
-### This project follows a clear and modular structure to keep the codebase organized and easy to maintain. Here's a breakdown of the main directories and files:
-
-controllers/: This is where the core business logic resides. These files handle incoming API requests, process them, and send back responses.
-
-middleware/: Contains custom Express middleware for tasks like user authentication, request logging, and error handling.
-
-models/: Defines the database schemas using Mongoose, which dictates the structure of the data stored in MongoDB.
-
-routes/: Manages all API endpoints. Each file here maps a specific URL path to a controller function.
-
-services/: Handles communication with external APIs (like TMDB). This keeps the logic for fetching and processing external data separate and reusable.
-
-utils/: A collection of utility functions and helpers used throughout the application, such as standardized response wrappers or data formatting functions.
-
 # 📖 API Endpoints
 
 ## 🎬 Movies
@@ -186,7 +133,36 @@ utils/: A collection of utility functions and helpers used throughout the applic
 | `/favorites`                  | GET    | —                                                                   | Get all favorites of user        | `mapFavorite`   |
 | `/favorites/:type/:tmdbId`    | DELETE | Path: `type=movie/tv/person`, `tmdbId`                              | Remove a favorite                | `mapFavorite`   |
 
+---
 
+## 🧪 Testing with Postman
+
+1.  **Register a new user** by sending a `POST` request to `/api/auth/register`.
+2.  **Login** using the new credentials via a `POST` request to `/api/auth/login`.
+3.  Copy the `token` from the login response.
+4.  For all **protected routes** (like the `/api/favorites` endpoints), you must include an `Authorization` header with your request:
+    -   **Key**: `Authorization`
+    -   **Value**: `Bearer <your_token>`
+
+---
+
+## 📂 Project Structure
+
+### This project follows a clear and modular structure to keep the codebase organized and easy to maintain. Here's a breakdown of the main directories and files:
+
+controllers/: This is where the core business logic resides. These files handle incoming API requests, process them, and send back responses.
+
+middleware/: Contains custom Express middleware for tasks like user authentication, request logging, and error handling.
+
+models/: Defines the database schemas using Mongoose, which dictates the structure of the data stored in MongoDB.
+
+routes/: Manages all API endpoints. Each file here maps a specific URL path to a controller function.
+
+services/: Handles communication with external APIs (like TMDB). This keeps the logic for fetching and processing external data separate and reusable.
+
+utils/: A collection of utility functions and helpers used throughout the application, such as standardized response wrappers or data formatting functions.
+
+---
 
 ### Key Files
 .env: Stores environment variables and sensitive information like API keys and database connection strings. This file is kept out of version control for security.
