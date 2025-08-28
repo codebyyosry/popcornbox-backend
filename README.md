@@ -128,6 +128,66 @@ services/: Handles communication with external APIs (like TMDB). This keeps the 
 
 utils/: A collection of utility functions and helpers used throughout the application, such as standardized response wrappers or data formatting functions.
 
+# 📖 API Endpoints
+
+## 🎬 Movies
+| Endpoint                 | Method | Params / Query                  | Description                        | Response Mapper            |
+| ------------------------- | ------ | ------------------------------- | ---------------------------------- | -------------------------- |
+| `/movies/popular`         | GET    | `page` (optional)               | Get popular movies                 | `formatPaginatedResponse`  |
+| `/movies/now_playing`     | GET    | `page` (optional)               | Get movies currently in theaters   | `formatPaginatedResponse`  |
+| `/movies/top-rated`       | GET    | `page` (optional)               | Get top-rated movies               | `formatPaginatedResponse`  |
+| `/movies/upcoming`        | GET    | `page` (optional)               | Get upcoming movies                | `formatPaginatedResponse`  |
+| `/movies/genres`          | GET    | —                               | Get list of movie genres           | `fetchGenres`              |
+| `/movies/search`          | GET    | `query` (required), `page`      | Search movies                      | `formatPaginatedResponse`  |
+| `/movies/genre/:genreId`  | GET    | `genreId` (path), `page`        | Get movies by genre                | `formatPaginatedResponse`  |
+| `/movies/:id`             | GET    | `id` (path)                     | Get movie details                  | `mapTMDBMovieDetails`      |
+| `/movies/:id/credits`     | GET    | `id` (path)                     | Get movie cast & crew              | `mapTMDBCredits`           |
+
+---
+
+## 👤 Persons
+| Endpoint                       | Method | Params / Query             | Description              | Response Mapper              |
+| ------------------------------ | ------ | -------------------------- | ------------------------ | ---------------------------- |
+| `/persons/popular`             | GET    | `page` (optional)          | Get popular persons      | `formatPaginatedResponsePersons` |
+| `/persons/:id`                 | GET    | `id` (path)                | Get person details       | `mapTMDBPersonDetails`       |
+| `/persons/:id/movie_credits`   | GET    | `id` (path)                | Get person's movie credits | `mapTMDBMovie`             |
+| `/persons/:id/tv_credits`      | GET    | `id` (path)                | Get person's TV credits  | `mapTMDBTV`                  |
+| `/persons/search`              | GET    | `query` (required), `page` | Search persons           | `mapTMDBPerson`              |
+| `/persons/trending/:time_window` | GET  | `time_window=day/week`     | Trending persons         | `formatPaginatedResponsePersons` |
+
+---
+
+## 📺 TV Shows
+| Endpoint                          | Method | Params / Query     | Description                      | Response Mapper         |
+| --------------------------------- | ------ | ----------------- | -------------------------------- | ----------------------- |
+| `/tv/popular`                     | GET    | `page` (optional) | Get popular TV shows             | `formatPaginatedResponseTV` |
+| `/tv/top_rated`                   | GET    | `page` (optional) | Get top-rated TV shows           | `formatPaginatedResponseTV` |
+| `/tv/on_the_air`                  | GET    | `page` (optional) | Currently airing TV shows        | `formatPaginatedResponseTV` |
+| `/tv/airing_today`                | GET    | `page` (optional) | TV shows airing today            | `formatPaginatedResponseTV` |
+| `/tv/:series_id`                  | GET    | `series_id`       | Get TV series details (w/ seasons) | `mapTMDBTVDetails`    |
+| `/tv/:series_id/recommendations`  | GET    | `series_id`       | Get recommended TV shows         | `formatPaginatedResponseTV` |
+| `/tv/:series_id/similar`          | GET    | `series_id`       | Get similar TV shows             | `formatPaginatedResponseTV` |
+| `/tv/:series_id/videos`           | GET    | `series_id`       | Get TV series trailers           | Custom mapping          |
+| `/tv/:series_id/credits`          | GET    | `series_id`       | Get cast & crew of TV show       | `mapTMDBCredits`        |
+
+---
+
+## 🔎 Search
+| Endpoint        | Method | Params / Query            | Description                               | Response Mapper   |
+| --------------- | ------ | ------------------------- | ----------------------------------------- | ----------------- |
+| `/search/multi` | GET    | `query` (required), `page`| Search movies, TV shows, persons together | `mapMultiSearch`  |
+
+---
+
+## ⭐ Favorites
+| Endpoint                     | Method | Params / Query / Body                                                | Description                      | Response Mapper |
+| ----------------------------- | ------ | ------------------------------------------------------------------- | -------------------------------- | --------------- |
+| `/favorites`                  | POST   | Body: `tmdbId`, `type`, `title`, `posterUrl`, `releaseDate`         | Add favorite (movie, TV, person) | `mapFavorite`   |
+| `/favorites`                  | GET    | —                                                                   | Get all favorites of user        | `mapFavorite`   |
+| `/favorites/:type/:tmdbId`    | DELETE | Path: `type=movie/tv/person`, `tmdbId`                              | Remove a favorite                | `mapFavorite`   |
+
+
+
 ### Key Files
 .env: Stores environment variables and sensitive information like API keys and database connection strings. This file is kept out of version control for security.
 
