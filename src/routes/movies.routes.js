@@ -5,12 +5,13 @@ import { param, query } from "express-validator";
 import {
   getPopularMovies,
   getMovieDetails,
-  searchMoviesController,
   getTopRatedMovies,
   getUpcomingMovies,
   getGenres,
   getMovieCredits,
   getMoviesByGenre,
+  getNowPlayingMovies,
+  getTrendingMovies
 } from "../controllers/movies.controller.js";
 import { validate } from "../middlewares/validator.middleware.js";
 
@@ -22,17 +23,6 @@ const router = express.Router();
 // Movie genres
 router.get("/genres", getGenres);
 
-// Search movies
-router.get(
-  "/search",
-  [
-    query("query").notEmpty().withMessage("Query parameter is required"),
-    query("page").optional().isInt({ min: 1 }).withMessage("Page must be a positive integer"),
-    validate,
-  ],
-  searchMoviesController
-);
-
 // Popular movies
 router.get(
   "/popular",
@@ -41,6 +31,16 @@ router.get(
     validate,
   ],
   getPopularMovies
+);
+
+// Now Playing movies
+router.get(
+  "/now_playing",
+  [
+    query("page").optional().isInt({ min: 1 }).withMessage("Page must be a positive integer"),
+    validate,
+  ],
+  getNowPlayingMovies
 );
 
 // Top Rated movies
@@ -94,6 +94,17 @@ router.get(
     validate,
   ],
   getMovieDetails
+);
+
+// Trending movies
+router.get(
+  "/trending/:timeWindow",
+  [
+    param("timeWindow").isIn(["day", "week"]).withMessage("timeWindow must be 'day' or 'week'"),
+    query("page").optional().isInt({ min: 1 }).withMessage("Page must be a positive integer"),
+    validate,
+  ],
+  getTrendingMovies
 );
 
 export default router;

@@ -22,6 +22,11 @@ export const fetchMovieCredits = (movieId) =>
 export const fetchPopularMovies = (page = 1) =>
   fetchWithCache(`popular_${page}`, "/movie/popular", { language: "en-US", page });
 
+// Popular movies
+export const fetchNowPlayingMovies = (page = 1) =>
+  fetchWithCache(`now_playing_${page}`, "/movie/now_playing", { language: "en-US", page });
+
+
 // Top rated movies
 export const fetchTopRatedMovies = (page = 1) =>
   fetchWithCache(`topRated_${page}`, "/movie/top_rated", { language: "en-US", page });
@@ -30,15 +35,19 @@ export const fetchTopRatedMovies = (page = 1) =>
 export const fetchUpcomingMovies = (page = 1) =>
   fetchWithCache(`upcoming_${page}`, "/movie/upcoming", { language: "en-US", page });
 
-// Search
-export const searchMovies = (query, page = 1) =>
-  fetchWithCache(`search_${query}_${page}`, "/search/movie", { language: "en-US", query, page });
-
 // By genre
 export const fetchMoviesByGenre = (genreId, page = 1) =>
   fetchWithCache(`genre_${genreId}_${page}`, "/discover/movie", {
     language: "en-US",
     sort_by: "popularity.desc",
     with_genres: genreId,
+    page,
+  });
+
+
+  // --- Trending movies ---
+export const fetchTrendingMovies = (timeWindow = "day", page = 1) =>
+  fetchWithCache(`trending_movie_${timeWindow}_${page}`, `/trending/movie/${timeWindow}`, {
+    language: "en-US",
     page,
   });

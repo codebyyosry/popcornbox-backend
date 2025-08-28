@@ -3,12 +3,13 @@
 import {
   fetchPopularMovies,
   fetchMovieDetails,
-  searchMovies,
   fetchTopRatedMovies,
   fetchUpcomingMovies,
   fetchGenres,
   fetchMovieCredits,
   fetchMoviesByGenre,
+  fetchNowPlayingMovies,
+  fetchTrendingMovies
 } from "../services/movies.service.js";
 
 import { sendSuccess, sendError } from "../utils/response.js";
@@ -67,6 +68,20 @@ export async function getPopularMovies(req, res) {
   }
 }
 
+
+
+export async function getNowPlayingMovies(req, res) {
+  try {
+    const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+    const movies = await fetchNowPlayingMovies(page);
+    logger.info(`Successfully fetched now playing movies for page ${page}`);
+    return sendSuccess(res, "Now Playing movies retrieved", formatPaginatedResponse(movies));
+  } catch (error) {
+    logger.error(`Error fetching now playing movies: ${error.message}`, { stack: error.stack });
+    return sendError(res, "Failed to fetch now playing movies", error.message);
+  }
+}
+
 export async function getTopRatedMovies(req, res) {
   try {
     const page = req.query.page ? parseInt(req.query.page, 10) : 1;
@@ -91,22 +106,6 @@ export async function getUpcomingMovies(req, res) {
   }
 }
 
-export async function searchMoviesController(req, res) {
-  try {
-    const { query } = req.query;
-    const page = req.query.page ? parseInt(req.query.page, 10) : 1;
-
-    // Validation is now handled by the route middleware
-
-    const results = await searchMovies(query, page);
-    logger.info(`Successfully searched for movies with query: "${query}" on page ${page}`);
-    return sendSuccess(res, "Search results", formatPaginatedResponse(results));
-  } catch (error) {
-    logger.error(`Error searching movies with query "${req.query.query}": ${error.message}`, { stack: error.stack });
-    return sendError(res, "Failed to search movies", error.message);
-  }
-}
-
 export async function getMoviesByGenre(req, res) {
   try {
     const { genreId } = req.params;
@@ -120,5 +119,20 @@ export async function getMoviesByGenre(req, res) {
   } catch (error) {
     logger.error(`Error fetching movies by genre ID ${req.params.genreId}: ${error.message}`, { stack: error.stack });
     return sendError(res, "Failed to fetch movies by genre", error.message);
+  }
+}
+
+// --- Trending persons ---
+export async function getTrendingMovies(req, res) {
+  try {
+    const { timeWindow } = req.params; // day | week
+    const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+
+    const movies = await fetchTrendingMovies(timeWindow, page);
+    logger.info(`Fetched trending movies for timeWindow: ${timeWindow}, page ${page}`);
+    return sendSuccess(res, "Trending Movies retrieved", formatPaginatedResponse(movies));
+  } catch (error) {
+    logger.error(`Error fetching trending movies: ${error.message}`, { stack: error.stack });
+    return sendError(res, "Failed to fetch trending movies", error.message);
   }
 }

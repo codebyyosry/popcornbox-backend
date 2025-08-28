@@ -9,19 +9,23 @@ const favoriteSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  movieId: {
+  tmdbId: {
     type: Number,
-    required: true, // TMDB movie ID
+    required: true, // TMDB ID (movie, tv, person)
+  },
+  type: {
+    type: String,
+    enum: ["movie", "tv", "person"],
+    required: true, // specify what this favorite is
   },
   title: {
-    type: String,
-    required: true, // Movie title
+    type: String, // Movie or TV name/title
   },
   posterUrl: {
-    type: String,   // Poster image URL
+    type: String, // Poster image URL
   },
   releaseDate: {
-    type: String,   // Release date
+    type: String, // Release date for movie or firstAirDate for TV
   },
   addedAt: {
     type: Date,
@@ -30,7 +34,7 @@ const favoriteSchema = new mongoose.Schema({
 });
 
 // Ensure a user cannot add the same movie twice
-favoriteSchema.index({ user: 1, movieId: 1 }, { unique: true });
+favoriteSchema.index({ user: 1, tmdbId: 1, type: 1 }, { unique: true });
 
 const Favorite = mongoose.model("Favorite", favoriteSchema);
 
